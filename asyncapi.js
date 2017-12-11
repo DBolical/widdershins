@@ -97,7 +97,7 @@ function processObject(obj, options, asyncapi) {
 function convert(asyncapi, options, callback) {
 
     var defaults = {};
-    defaults.language_tabs = [{ 'javascript--nodejs': 'Node.JS' },{ 'javascript': 'JavaScript' }, { 'ruby': 'Ruby' }, { 'python': 'Python' }, { 'java': 'Java' }, { 'go': 'Go'}];
+    defaults.language_tabs = [{ 'javascript--nodejs': 'Node.JS' },{ 'javascript': 'JavaScript' }, { 'python': 'Python' }, { 'java': 'Java' }, { 'go': 'Go'}];
     defaults.codeSamples = true;
     defaults.theme = 'darkula';
     defaults.search = true;

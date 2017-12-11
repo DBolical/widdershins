@@ -621,7 +621,7 @@ function processOperation(op, method, resource, options) {
 function convert(openapi, options, callback) {
 
     var defaults = {};
-    defaults.language_tabs = [{ 'shell': 'Shell' }, { 'http': 'HTTP' }, { 'javascript': 'JavaScript' }, { 'javascript--nodejs': 'Node.JS' }, { 'ruby': 'Ruby' }, { 'python': 'Python' }, { 'java': 'Java' }];
+    defaults.language_tabs = [{ 'shell': 'Shell' }, { 'http': 'HTTP' }, { 'javascript': 'JavaScript' }, { 'javascript--nodejs': 'Node.JS' }, { 'python': 'Python' }, { 'java': 'Java' }];
     defaults.codeSamples = true;
     defaults.theme = 'darkula';
     defaults.search = true;
@@ -769,6 +769,7 @@ function convert(openapi, options, callback) {
             data.schema = schema;
             data.enums = [];
             data.schemaProperties = [];
+
             common.schemaToArray(schema,0,data.schemaProperties,true);
 
             for (let p of data.schemaProperties) {

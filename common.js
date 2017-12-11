@@ -170,6 +170,20 @@ function schemaToArray(schema,depth,lines,trim) {
                 prop.depth = depth;
                 if (obj[p].enum) prop.schema = {enum:obj[p].enum};
                 lines.push(prop);
+
+	            // #PS widdershins for some odd reason adds the pagination metadata to
+                // the top of the schema even though we specify in the swagger-php
+                // annotations to appear at the bottom, so we need to make sure for
+                // each schema to push these values to the bottom of the object.
+                var metaFields = ['result_count', 'result_limit', 'result_offset'];
+
+	            for (var val in lines) {
+	                metaFields.forEach(function(metaField) {
+                        if (lines[val].name == metaField) {
+                            lines.push(lines.splice(val,1)[0]);
+                        }
+                    });
+	            }
             }
         }
     });
