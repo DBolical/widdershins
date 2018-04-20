@@ -20,8 +20,8 @@ var data;
 var content;
 var circles = [];
 
-/**
-* function to reformat openapi paths object into an iodocs-style resources object, tags-first
+/** function to reformat openapi paths object into an iodocs-style resources object, tags-first
+*
 */
 function convertToToc(source) {
     var apiInfo = common.clone(source, false);
@@ -236,6 +236,30 @@ function processOperation(op, method, resource, options) {
     }
     data.parameters = parameters;
 
+    // #PS we index the body params only so in the .dot
+    // files we can access the relevant data easier.
+    data.bodyParams = null;
+    data.parameters.forEach(function (value) {
+        if (value.name == 'body') {
+            data.bodyParams = Object.values(value.schema.properties);
+            data.bodyParams.forEach(function(val, i) {
+                var fieldPrefix = '-d';
+                data.bodyParams[i].property = Object.keys(value.schema.properties)[i];
+
+                // we need to know whether we need to use -F or -d for all of the data
+                data.bodyParams.forEach(function(param) {
+                    if (param.type == 'file') {
+                        fieldPrefix = '-F';
+                    }
+                });
+
+                data.bodyParams.forEach(function(param, key) {
+                    data.bodyParams[key].prefix = fieldPrefix;
+                })
+            });
+        }
+    });
+
     data.allHeaders = common.clone(data.headerParameters);
     if (data.consumes.length) {
         var contentType = {};
@@ -338,7 +362,10 @@ function processOperation(op, method, resource, options) {
         var paramHeader = false;
         for (var p in parameters) {
             param = parameters[p];
-            if ((param.in === 'body') && (param.depth == 0)) {
+            // #PS we don't need to show this add the moment
+            // shows the raw request body params as key : value
+            // we already show example request + response.
+/*            if ((param.in === 'body') && (param.depth == 0)) {
                 var xmlWrap = '';
                 var obj = common.dereference(param.schema, circles, data.openapi, common.clone, options.aggressive);
                 if (obj && !paramHeader) {
@@ -381,7 +408,7 @@ function processOperation(op, method, resource, options) {
                         content += '```\n';
                     }
                 }
-            }
+            }*/
         }
 
         data.parameters = parameters; // redundant?

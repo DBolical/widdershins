@@ -1,4 +1,5 @@
 # You can also use wget
 curl -X {{=data.methodUpper}} {{=data.url}}{{=data.requiredQueryString}}{{?data.allHeaders.length}} \{{?}}
-{{~data.allHeaders :p:index}}  -H '{{=p.name}}: {{=p.exampleValues.object}}'{{?index < data.allHeaders.length-1}} \{{?}}
+{{~data.allHeaders :p:index}}  -H '{{=p.name}}: {{=p.exampleValues.object}}'{{? index < data.allHeaders.length-1}} \ {{?? (index == data.allHeaders.length-1 && (data.methodUpper == 'POST' || data.methodUpper == 'DELETE') && data.bodyParams !== null)}} \{{?}}
+{{~}}{{~data.bodyParams :value:i}}  {{=value.prefix}} '{{=value.property}}{{? value.type == 'array'}}[]{{?}}={{=value.default}}'{{?i < data.bodyParams.length-1}} \{{?}}
 {{~}}
