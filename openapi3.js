@@ -624,13 +624,18 @@ function processOperation(op, method, resource, options) {
             list += (list ? ', ' : '') + (secDef ? secDef.type : 'None');
             var scopes = security[s][Object.keys(security[s])[0]];
             if (Array.isArray(scopes) && (scopes.length > 0)) {
-                list += ' ( Scopes: ';
+                list += ' (Scopes: ';
                 for (var scope in scopes) {
-                    list += scopes[scope] + ' ';
+                    list += scopes[scope];
                 }
                 list += ')';
             }
         }
+
+        // #PS replace the formatting for apiKey & oauth2
+        list = list.replace(/oauth2/, '<a href="#authentication">OAuth 2</a>');
+        list = list.replace(/apiKey/, '<a href="#authentication">api_key</a>');
+
         data.authenticationStr = list;
         data = options.templateCallback('authentication', 'pre', data);
         if (data.append) { content += data.append; delete data.append; }
