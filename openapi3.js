@@ -544,7 +544,7 @@ function processOperation(op, method, resource, options) {
     content += templates.responses(data);
     data = options.templateCallback('responses', 'post', data);
     if (data.append) { content += data.append; delete data.append; }
-
+    
     if (inlineSchemas && options.schema) {
         for (var resp in op.responses) {
             var response = op.responses[resp];
@@ -563,7 +563,12 @@ function processOperation(op, method, resource, options) {
                                 var nvp = {};
                                 nvp.name = param.name;
                                 nvp.value = param.schema.enum[e];
-                                data.enums.push(nvp);
+
+                                if (nvp.name === 'data') {
+                                    data.enums.unshift(nvp)
+                                } else {
+                                    data.enums.push(nvp);
+                                }
                             }
                         }
                     }

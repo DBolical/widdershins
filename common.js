@@ -143,7 +143,7 @@ function extract(o,parent,seen,depth,callback){
 }
 
 function schemaToArray(schema,depth,lines,trim) {
-
+    
     let seen = [];
     extract(schema,'',seen,depth,function(obj,depth,required,oldRef){
         let prefix = '»'.repeat(depth);
@@ -175,7 +175,7 @@ function schemaToArray(schema,depth,lines,trim) {
                 // the top of the schema even though we specify in the swagger-php
                 // annotations to appear at the bottom, so we need to make sure for
                 // each schema to push these values to the bottom of the object.
-                var metaFields = ['result_count', 'result_limit', 'result_offset'];
+                var metaFields = ['result_count', 'result_offset', 'result_limit', 'result_total'];
 
 	            for (var val in lines) {
 	                metaFields.forEach(function(metaField) {
