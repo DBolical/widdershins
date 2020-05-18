@@ -33,8 +33,9 @@ function convertToToc(source) {
                 var ioMethod = {};
                 ioMethod.path = p;
                 ioMethod.op = m;
-                var sMethodUniqueName = (sMethod.operationId ? sMethod.operationId : m + '_' + p).split('/').join('_');
+                var sMethodUniqueName = (sMethod.operationId ? sMethod.operationId : m + '_' + p).split('/').join('');
                 sMethodUniqueName = sMethodUniqueName.split(' ').join('_'); // TODO {, } and : ?
+
                 var tagName = 'Default';
                 if (sMethod.tags && sMethod.tags.length > 0) {
                     tagName = sMethod.tags[0];
@@ -153,6 +154,7 @@ function processOperation(op, method, resource, options) {
         body.required = op.requestBody.required;
         body.description = op.requestBody.description ? op.requestBody.description : 'No description';
         body.schema = op.requestBody.content[Object.keys(op.requestBody.content)[0]].schema;
+        
         if (body.schema && typeof body.schema.$ref === 'string') {
             rbType = body.schema.$ref.replace('#/components/schemas/','');
             rbType = '['+rbType+'](#'+common.gfmLink('schema'+rbType)+')';
@@ -250,6 +252,8 @@ function processOperation(op, method, resource, options) {
                 data.bodyParams.forEach(function(param) {
                     if (param.type == 'file') {
                         fieldPrefix = '-F';
+                    } else if (param.property == 'appdata') {
+                        fieldPrefix = '--data-urlencode';
                     }
                 });
 
@@ -772,7 +776,7 @@ function convert(openapi, options, callback) {
 
         for (var m in resource.methods) {
             var method = resource.methods[m];
-            data.subtitle = method.op.toUpperCase() + ' ' + method.path;
+            data.subtitle = method.op.toUpperCase() + ' /' + method.path;
             var op = openapi.paths[method.path][method.op];
             if ((method.op !== 'parameters') && (method.op !== 'summary') && (method.op !== 'description') &&
                 (!method.op.startsWith('x-'))) {
